@@ -10,5 +10,5 @@ class ProductRepository {
     return data
         .map<Product>((json) => Product.fromJson(json))
         .toList();
-  }
+  }  
 }
