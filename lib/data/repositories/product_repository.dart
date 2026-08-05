@@ -1,14 +1,29 @@
-import '../api/api_service.dart';
-import '../models/product_model.dart';
+import '../../domain/models/product_model.dart';
+import '../services/api_service.dart';
 
-class ProductRepository {
-  final ApiService _apiService = ApiService();
 
-  Future<List<Product>> getProducts() async {
-    final data = await _apiService.getProducts();
+class ProductRepository{
 
-    return data
-        .map<Product>((json) => Product.fromJson(json))
-        .toList();
-  }  
+
+final ApiService apiService;
+
+
+ProductRepository(this.apiService);
+
+
+
+Future<List<Product>> getProducts() async{
+
+
+final data = await apiService.getProducts();
+
+
+return data
+.map((json)=>Product.fromJson(json))
+.toList();
+
+
+}
+
+
 }

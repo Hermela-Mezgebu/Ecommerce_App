@@ -1,12 +1,31 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/models/product_model.dart';
-import '../../data/repositories/product_repository.dart';
 
-final productRepositoryProvider = Provider((ref) {
-  return ProductRepository();
+import '../../data/repositories/product_repository.dart';
+import '../../data/services/api_service.dart';
+import '../../domain/models/product_model.dart';
+
+
+
+final productRepositoryProvider =
+Provider<ProductRepository>((ref){
+
+return ProductRepository(
+ApiService()
+);
+
 });
 
-final productsProvider = FutureProvider<List<Product>>((ref) async {
-  final repository = ref.read(productRepositoryProvider);
-  return repository.getProducts();
+
+
+final productsProvider =
+FutureProvider<List<Product>>((ref) async{
+
+
+final repository =
+ref.watch(productRepositoryProvider);
+
+
+return repository.getProducts();
+
+
 });
