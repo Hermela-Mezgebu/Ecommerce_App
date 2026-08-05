@@ -25,5 +25,18 @@ return data
 
 }
 
+Future<List<String>> getCategories() async {
+  final data = await apiService.getCategories();
+  return List<String>.from(data);
+}
+
+Future<List<Product>> getProductsByCategory(String category) async {
+  final data = await apiService.getProductsByCategory(category);
+
+  return data
+      .map((json) => Product.fromJson(json))
+      .toList();
+}
+
 
 }

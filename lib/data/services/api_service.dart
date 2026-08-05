@@ -34,4 +34,13 @@ class ApiService {
     final response = await get('/products');
     return response.data;
   }
+  Future<List<dynamic>> getCategories() async {
+  final response = await get('/products/categories');
+  return response.data;
+}
+
+Future<List<dynamic>> getProductsByCategory(String category) async {
+  final response = await get('/products/category/$category');
+  return response.data;
+}
 }
