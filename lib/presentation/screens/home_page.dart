@@ -6,6 +6,9 @@ import '../providers/product_provider.dart';
 import 'categories_page.dart';
 import 'product_details_page.dart';
 import 'cart_page.dart';
+import '../providers/cart_provider.dart'; 
+import '../providers/notification_provider.dart'; 
+import 'product_search_delegate.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -79,21 +82,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         color: Color(0xFF775A19),
                       ),
                     ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.search,
-                        color: Color(0xFF775A19),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: _openCartPage,
-                      icon: const Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Color(0xFF775A19),
-                      ),
-                    ),
+                  const Spacer(), IconButton( icon: const Icon(Icons.search), onPressed: () { showSearch( context: context, delegate: ProductSearchDelegate(ref), ); }, ), IconButton( onPressed: _openCartPage, icon: const Icon( Icons.shopping_cart_outlined, color: Color(0xFF775A19), ), ), Consumer( builder: (context, ref, child) { final notificationCount = ref.watch(notificationCountProvider); return Stack( children: [ IconButton( onPressed: () {}, icon: const Icon(Icons.notifications_none), ), if (notificationCount > 0) Positioned( right: 8, top: 8, child: Container( padding: const EdgeInsets.all(4), decoration: const BoxDecoration( color: Colors.red, shape: BoxShape.circle, ), child: Text( '$notificationCount', style: const TextStyle( color: Colors.white, fontSize: 10, ), ), ), ), ], ); }, ),
                   ],
                 ),
               ),
@@ -294,25 +283,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     (context, index) {
                       final product = items[index];
 
-                      return ProductCard(
-                        product: product,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDetailsPage(product: product),
-                            ),
-                          );
-                        },
-                        onAddToCart: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${product.title} added to cart'),
-                            ),
-                          );
-                        },
-                      );
+                     return ProductCard( product: product, onTap: () { Navigator.push( context, MaterialPageRoute( builder: (context) => ProductDetailsPage(product: product), ), ); }, onAddToCart: () { ref.read(cartProvider.notifier).addToCart(product); ScaffoldMessenger.of(context).showSnackBar( SnackBar( content: Text( '${product.title} added to cart', ), ), ); }, );
+                      
                     },
                     childCount: items.length,
                   ),

@@ -28,4 +28,26 @@ class Product {
     );
 
   }
+
+  Map<String, dynamic> toJson() {
+  return {
+    'id': id,
+    'title': title,
+    'price': price,
+    'description': description,
+    'category': category,
+    'image': image,
+  };
+}
+
+factory Product.fromMap(Map<String, dynamic> map) {
+  return Product(
+    id: map['id'],
+    title: map['title'],
+    price: (map['price'] as num).toDouble(),
+    description: map['description'],
+    category: map['category'],
+    image: map['image'],
+  );
+}
 }
