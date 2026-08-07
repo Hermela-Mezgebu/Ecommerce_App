@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'presentation/screens/login_page.dart';
-
+import 'presentation/screens/main_navigation_page.dart';
 
 void main() {
   runApp(
@@ -12,22 +10,20 @@ void main() {
   );
 }
 
-
 class MyApp extends StatelessWidget {
-
   const MyApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
+      title: 'Habesha Mart',
       debugShowCheckedModeBanner: false,
-      title: 'E-Commerce App',
-
-      home: const LoginPage(),
-
+      theme: ThemeData(
+        fontFamily: 'Montserrat',
+        primarySwatch: Colors.brown,
+        useMaterial3: true,
+      ),
+      home: const MainNavigationPage(),
     );
-
   }
 }

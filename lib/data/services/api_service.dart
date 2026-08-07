@@ -43,4 +43,9 @@ Future<List<dynamic>> getProductsByCategory(String category) async {
   final response = await get('/products/category/$category');
   return response.data;
 }
+
+Future<Map<String, dynamic>> getUser(int id) async {
+  final response = await get('/users/$id');
+  return response.data;
+}
 }

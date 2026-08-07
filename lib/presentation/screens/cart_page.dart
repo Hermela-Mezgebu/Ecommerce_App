@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cart_provider.dart';
-// Remove: import '../../domain/models/product_model.dart';
 import '../../domain/models/cart_item_model.dart';
+import 'main_navigation_page.dart'; // This imports mainNavigationKey
 import 'categories_page.dart';
-
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
 
@@ -70,20 +69,21 @@ class CartPage extends ConsumerWidget {
       );
     }
 
-    void continueShopping() {
-      Navigator.pop(context);
-    }
+  void goToCategoriesPage() {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const CategoriesPage(selectedCategory: 'All'),
+    ),
+  );
+}
 
-    void goToCategoriesPage() {
-      // Navigate to categories page with a default selected category
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CategoriesPage(
-            selectedCategory: 'All', // Add the required parameter
-          ),
-        ),
-      );
+    void goBack() {
+      // Only pop if there's a previous page
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      // If can't pop, we're already at the root, so do nothing
     }
 
     void proceedToCheckout() {
@@ -180,7 +180,7 @@ class CartPage extends ConsumerWidget {
                     SizedBox(
                       width: double.infinity,
                       child: TextButton.icon(
-                        onPressed: continueShopping,
+                        onPressed: goBack,
                         icon: const Icon(
                           Icons.arrow_back,
                           color: primary,

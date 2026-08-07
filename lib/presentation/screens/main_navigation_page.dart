@@ -1,35 +1,62 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/cart_provider.dart';
 import 'home_page.dart';
 import 'categories_page.dart';
 import 'cart_page.dart';
 // import 'profile_page.dart';
 
-class MainNavigationPage extends StatefulWidget {
-  const MainNavigationPage({super.key});
+// Make the class public by removing the underscore
+class MainNavigationPage extends ConsumerStatefulWidget {
+  final int initialIndex;
+
+  const MainNavigationPage({
+    super.key,
+    this.initialIndex = 0,
+  });
 
   @override
-  State<MainNavigationPage> createState() => _MainNavigationPageState();
+  ConsumerState<MainNavigationPage> createState() => MainNavigationPageState();
 }
 
-class _MainNavigationPageState extends State<MainNavigationPage> {
+// Make the state public by removing the underscore
+class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    CategoriesPage(selectedCategory: 'All'),
-    CartPage(),
-    // ProfilePage(),
-  ];
+  // Public method to change tab from anywhere
+  void changeTab(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomePage(),
+      const CategoriesPage(selectedCategory: 'All'),
+      const CartPage(),
+      // const ProfilePage(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Watch cart to get item count for badge using ref
+    final cartItems = ref.watch(cartProvider);
+    final cartItemCount = cartItems.fold(
+      0,
+      (sum, item) => sum + item.quantity,
+    );
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
       ),
-
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 75,
@@ -37,7 +64,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             color: const Color(0xFFF8F9FA),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 15,
                 offset: const Offset(0, -4),
               ),
@@ -51,20 +78,17 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 label: 'Home',
                 index: 0,
               ),
-
               _buildNavItem(
                 icon: Icons.grid_view_rounded,
                 label: 'Categories',
                 index: 1,
               ),
-
               _buildNavItem(
                 icon: Icons.shopping_cart_rounded,
                 label: 'Cart',
                 index: 2,
-                badge: '2',
+                badge: cartItemCount > 0 ? cartItemCount.toString() : null,
               ),
-
               _buildNavItem(
                 icon: Icons.person_rounded,
                 label: 'Profile',
@@ -117,9 +141,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                       ? const Color(0xFF4E3700)
                       : const Color(0xFF4E4639),
                 ),
-
                 const SizedBox(height: 3),
-
                 Text(
                   label,
                   style: TextStyle(
@@ -132,8 +154,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 ),
               ],
             ),
-
-            if (badge != null)
+            if (badge != null && badge.isNotEmpty)
               Positioned(
                 right: -5,
                 top: -5,
