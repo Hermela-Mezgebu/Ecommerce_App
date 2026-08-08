@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/cart_provider.dart';
-import '../../domain/models/cart_item_model.dart';
-import 'main_navigation_page.dart'; // This imports mainNavigationKey
+// This imports mainNavigationKey
 import 'categories_page.dart';
+import '../../domain/models/cart_item.dart';
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
 
@@ -43,8 +43,11 @@ class CartPage extends ConsumerWidget {
       final currentItem = cartItems[index];
       final newQuantity = currentItem.quantity + change;
       
-      if (newQuantity <= 0) {
-        ref.read(cartProvider.notifier).removeProduct(currentItem.product);
+     if (newQuantity <= 0) {
+  ref.read(cartProvider.notifier)
+      .removeFromCart(
+        currentItem.product.id.toString(),
+      );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${currentItem.product.title} removed from cart'),
@@ -52,15 +55,24 @@ class CartPage extends ConsumerWidget {
           ),
         );
       } else if (change > 0) {
-        ref.read(cartProvider.notifier).increaseQuantity(currentItem.product);
+        ref.read(cartProvider.notifier)
+    .increaseQuantity(
+      currentItem.product.id.toString(),
+    );
       } else {
-        ref.read(cartProvider.notifier).decreaseQuantity(currentItem.product);
+        ref.read(cartProvider.notifier)
+    .decreaseQuantity(
+      currentItem.product.id.toString(),
+    );
       }
     }
 
     void removeItem(int index) {
       final removedItem = cartItems[index];
-      ref.read(cartProvider.notifier).removeProduct(removedItem.product);
+      ref.read(cartProvider.notifier)
+    .removeFromCart(
+      removedItem.product.id.toString(),
+    );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${removedItem.product.title} removed from cart'),

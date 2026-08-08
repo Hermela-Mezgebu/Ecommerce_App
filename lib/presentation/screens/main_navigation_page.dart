@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../providers/cart_provider.dart';
 import 'home_page.dart';
 import 'categories_page.dart';
 import 'cart_page.dart';
-// import 'profile_page.dart';
+import 'profile_page.dart';
 
-// Make the class public by removing the underscore
 class MainNavigationPage extends ConsumerStatefulWidget {
   final int initialIndex;
 
@@ -16,38 +16,52 @@ class MainNavigationPage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MainNavigationPage> createState() => MainNavigationPageState();
+  ConsumerState<MainNavigationPage> createState() =>
+      MainNavigationPageState();
 }
 
-// Make the state public by removing the underscore
-class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
-  int _currentIndex = 0;
-
-  // Public method to change tab from anywhere
-  void changeTab(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+class MainNavigationPageState
+    extends ConsumerState<MainNavigationPage> {
+  late int _currentIndex;
 
   late final List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
+
+    // Use the requested starting tab.
+    _currentIndex = widget.initialIndex.clamp(0, 3);
+
     _pages = [
       const HomePage(),
-      const CategoriesPage(selectedCategory: 'All'),
+
+      const CategoriesPage(
+        selectedCategory: 'All',
+      ),
+
       const CartPage(),
-      // const ProfilePage(),
+
+      const ProfilePage(),
     ];
+  }
+
+  /// Allows another page to switch the selected tab.
+  void changeTab(int index) {
+    if (index < 0 || index >= _pages.length) {
+      return;
+    }
+
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Watch cart to get item count for badge using ref
     final cartItems = ref.watch(cartProvider);
-    final cartItemCount = cartItems.fold(
+
+    final cartItemCount = cartItems.fold<int>(
       0,
       (sum, item) => sum + item.quantity,
     );
@@ -57,6 +71,7 @@ class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         index: _currentIndex,
         children: _pages,
       ),
+
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 75,
@@ -78,17 +93,22 @@ class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
                 label: 'Home',
                 index: 0,
               ),
+
               _buildNavItem(
                 icon: Icons.grid_view_rounded,
                 label: 'Categories',
                 index: 1,
               ),
+
               _buildNavItem(
                 icon: Icons.shopping_cart_rounded,
                 label: 'Cart',
                 index: 2,
-                badge: cartItemCount > 0 ? cartItemCount.toString() : null,
+                badge: cartItemCount > 0
+                    ? cartItemCount.toString()
+                    : null,
               ),
+
               _buildNavItem(
                 icon: Icons.person_rounded,
                 label: 'Profile',
@@ -110,10 +130,9 @@ class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
     final bool isSelected = _currentIndex == index;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
+        changeTab(index);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
@@ -141,7 +160,9 @@ class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
                       ? const Color(0xFF4E3700)
                       : const Color(0xFF4E4639),
                 ),
+
                 const SizedBox(height: 3),
+
                 Text(
                   label,
                   style: TextStyle(
@@ -154,6 +175,7 @@ class MainNavigationPageState extends ConsumerState<MainNavigationPage> {
                 ),
               ],
             ),
+
             if (badge != null && badge.isNotEmpty)
               Positioned(
                 right: -5,

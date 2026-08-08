@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'presentation/screens/main_navigation_page.dart';
 
+import 'presentation/screens/login_page.dart';
 void main() {
   runApp(
     const ProviderScope(
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.brown,
         useMaterial3: true,
       ),
-      home: const MainNavigationPage(),
+      home: const LoginPage(),
     );
   }
 }

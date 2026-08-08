@@ -4,7 +4,7 @@ class CartItem {
   final Product product;
   final int quantity;
 
-  CartItem({
+  const CartItem({
     required this.product,
     required this.quantity,
   });
@@ -28,8 +28,8 @@ class CartItem {
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      product: Product.fromMap(json['product']),
-      quantity: json['quantity'],
+      product: Product.fromJson(json['product'] as Map<String, dynamic>),
+      quantity: json['quantity'] as int,
     );
   }
 }

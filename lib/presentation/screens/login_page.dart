@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../providers/auth_provider.dart';
 import 'main_navigation_page.dart';
-
+import 'signUp_page.dart';
+import 'package:flutter/gestures.dart';
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -344,28 +345,37 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                         const SizedBox(height: 28),
 
-                        Center(
-                          child: RichText(
-                            text: TextSpan(
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                color: const Color(0xFF4E4639),
-                              ),
-                              children: [
-                                const TextSpan(
-                                  text: "Don't have an account? ",
-                                ),
-                                TextSpan(
-                                  text: 'Sign Up',
-                                  style: GoogleFonts.inter(
-                                    color: const Color(0xFF775A19),
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                       Center(
+  child: RichText(
+    text: TextSpan(
+      style: GoogleFonts.inter(
+        fontSize: 14,
+        color: const Color(0xFF4E4639),
+      ),
+      children: [
+        const TextSpan(
+          text: "Don't have an account? ",
+        ),
+        TextSpan(
+          text: "Sign Up",
+          style: GoogleFonts.inter(
+            color: const Color(0xFF775A19),
+            fontWeight: FontWeight.w700,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SignUpPage(),
+                ),
+              );
+            },
+        ),
+      ],
+    ),
+  ),
+),
                       ],
                     ),
                   ),
